@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Beast Mode 90" />
+  <meta name="description" content="90-day elite personal discipline tracker" />
+  <title>Beast Mode 90</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+
+  <!-- LOCK SCREEN -->
+  <div id="lockScreen" class="lock-screen" style="display:flex">
+    <div class="lock-content">
+      <div class="lock-logo">
+        <div class="logo-ring"></div>
+        <span class="logo-text">BM<span class="red">90</span></span>
+      </div>
+      <h1 class="lock-title">BEAST MODE 90</h1>
+      <p class="lock-sub">Enter your PIN to continue</p>
+      <div class="pin-display" id="pinDisplay">
+        <span class="pin-dot" id="pd0"></span>
+        <span class="pin-dot" id="pd1"></span>
+        <span class="pin-dot" id="pd2"></span>
+        <span class="pin-dot" id="pd3"></span>
+      </div>
+      <div class="numpad">
+        <button class="num-btn" id="pinBtn1" data-n="1">1</button>
+        <button class="num-btn" id="pinBtn2" data-n="2">2</button>
+        <button class="num-btn" id="pinBtn3" data-n="3">3</button>
+        <button class="num-btn" id="pinBtn4" data-n="4">4</button>
+        <button class="num-btn" id="pinBtn5" data-n="5">5</button>
+        <button class="num-btn" id="pinBtn6" data-n="6">6</button>
+        <button class="num-btn" id="pinBtn7" data-n="7">7</button>
+        <button class="num-btn" id="pinBtn8" data-n="8">8</button>
+        <button class="num-btn" id="pinBtn9" data-n="9">9</button>
+        <button class="num-btn ghost" id="pinBtnClear" data-n="clear">✕</button>
+        <button class="num-btn" id="pinBtn0" data-n="0">0</button>
+        <button class="num-btn ghost" id="pinBtnBack" data-n="back">⌫</button>
+      </div>
+      <p class="pin-hint" id="pinHint"></p>
+    </div>
+  </div>
+
+  <!-- MAIN APP WRAPPER -->
+  <div id="app" class="app" style="display:none">
+
+    <!-- TOP BAR -->
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <span class="app-logo">BM<span class="red">90</span></span>
+      </div>
+      <div class="top-bar-center" id="topBarTitle">DASHBOARD</div>
+      <div class="top-bar-right">
+        <button class="icon-btn" id="settingsBtn">⚙</button>
+      </div>
+    </header>
+
+    <!-- SCREENS -->
+
+    <!-- DASHBOARD -->
+    <div id="screenDashboard" class="screen-content active">
+      <div class="scroll-area">
+        <div class="hero-section">
+          <div class="day-badge">
+            <span class="day-label">DAY</span>
+            <span class="day-number" id="dayNumber">1</span>
+            <span class="day-of">of 90</span>
+          </div>
+          <div class="progress-ring-wrap">
+            <svg class="progress-ring" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="52"/>
+              <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="52"
+                stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+            </svg>
+            <div class="ring-center">
+              <span class="ring-pct" id="ringPct">0%</span>
+              <span class="ring-lbl">today</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-card">
+            <span class="stat-icon">🔥</span>
+            <span class="stat-val" id="statStreak">0</span>
+            <span class="stat-lbl">Streak</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">⚡</span>
+            <span class="stat-val" id="statXP">0</span>
+            <span class="stat-lbl">XP</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">🏆</span>
+            <span class="stat-val" id="statLevel">—</span>
+            <span class="stat-lbl">Level</span>
+          </div>
+        </div>
+
+        <div class="quote-card" id="quoteCard">
+          <span class="quote-icon">❝</span>
+          <p class="quote-text" id="quoteText">Loading...</p>
+          <p class="quote-author" id="quoteAuthor"></p>
+        </div>
+
+        <div class="section-header">
+          <span>WEEKLY PROGRESS</span>
+        </div>
+        <div class="weekly-chart" id="weeklyChart"></div>
+
+        <div class="section-header"><span>TODAY'S HABITS</span><a class="see-all" id="goHabitsFromDash">Track →</a></div>
+        <div class="habit-preview" id="habitPreview"></div>
+
+        <div class="section-header"><span>QUICK STATS</span></div>
+        <div class="quick-stats-grid">
+          <div class="qs-card red-border">
+            <span class="qs-val" id="qsTotalScore">0</span>
+            <span class="qs-lbl">Total Score</span>
+          </div>
+          <div class="qs-card">
+            <span class="qs-val" id="qsBestStreak">0</span>
+            <span class="qs-lbl">Best Streak</span>
+          </div>
+          <div class="qs-card">
+            <span class="qs-val" id="qsDaysLogged">0</span>
+            <span class="qs-lbl">Days Logged</span>
+          </div>
+          <div class="qs-card">
+            <span class="qs-val" id="qsAvgScore">0%</span>
+            <span class="qs-lbl">Avg Score</span>
+          </div>
+        </div>
+        <div class="bottom-space"></div>
+      </div>
+    </div>
+
+    <!-- HABITS SCREEN -->
+    <div id="screenHabits" class="screen-content">
+      <div class="scroll-area">
+        <div class="screen-hero">
+          <h2>DAILY HABITS</h2>
+          <p class="screen-date" id="habitsDate"></p>
+        </div>
+        <div class="score-display">
+          <div class="score-circle">
+            <span id="habitScore">0</span><span>/10</span>
+          </div>
+          <div class="score-meta">
+            <span id="habitScoreLabel">Keep going!</span>
+            <div class="xp-badge" id="habitXpBadge">+0 XP</div>
+          </div>
+        </div>
+        <div class="habits-list" id="habitsList"></div>
+        <div class="bottom-space"></div>
+      </div>
+    </div>
+
+    <!-- BODY TRACKER -->
+    <div id="screenBody" class="screen-content">
+      <div class="scroll-area">
+        <div class="screen-hero">
+          <h2>BODY TRACKER</h2>
+          <p class="screen-date" id="bodyDate"></p>
+        </div>
+        <div class="form-section">
+          <label class="form-label">Weight (kg)</label>
+          <input type="number" class="form-input" id="weightInput" placeholder="e.g. 78.5" step="0.1"/>
+          <label class="form-label">Chest (cm)</label>
+          <input type="number" class="form-input" id="chestInput" placeholder="Optional"/>
+          <label class="form-label">Waist (cm)</label>
+          <input type="number" class="form-input" id="waistInput" placeholder="Optional"/>
+          <label class="form-label">Arms (cm)</label>
+          <input type="number" class="form-input" id="armsInput" placeholder="Optional"/>
+          <label class="form-label">Workout Notes</label>
+          <textarea class="form-input form-textarea" id="workoutNotes" placeholder="What did you train today?"></textarea>
+          <button class="btn-primary" id="saveBodyBtn">SAVE TODAY'S BODY LOG</button>
+        </div>
+        <div class="section-header"><span>WEIGHT HISTORY</span></div>
+        <div class="weight-chart" id="weightChart"></div>
+        <div class="log-list" id="bodyLogList"></div>
+        <div class="bottom-space"></div>
+      </div>
+    </div>
+
+    <!-- MONEY TRACKER -->
+    <div id="screenMoney" class="screen-content">
+      <div class="scroll-area">
+        <div class="screen-hero">
+          <h2>MONEY TRACKER</h2>
+          <p class="screen-date" id="moneyDate"></p>
+        </div>
+        <div class="money-summary">
+          <div class="money-card green">
+            <span class="money-icon">↑</span>
+            <span class="money-amt" id="totalEarned">₹0</span>
+            <span class="money-lbl">Total Earned</span>
+          </div>
+          <div class="money-card red-card">
+            <span class="money-icon">↓</span>
+            <span class="money-amt" id="totalSpent">₹0</span>
+            <span class="money-lbl">Total Spent</span>
+          </div>
+          <div class="money-card blue">
+            <span class="money-icon">🏦</span>
+            <span class="money-amt" id="totalSaved">₹0</span>
+            <span class="money-lbl">Net Saved</span>
+          </div>
+        </div>
+        <div class="form-section">
+          <label class="form-label">Money Earned Today (₹)</label>
+          <input type="number" class="form-input" id="earnedInput" placeholder="0"/>
+          <label class="form-label">Money Spent Today (₹)</label>
+          <input type="number" class="form-input" id="spentInput" placeholder="0"/>
+          <label class="form-label">Spending Notes</label>
+          <textarea class="form-input form-textarea" id="spendingNotes" placeholder="What did you spend on?"></textarea>
+          <button class="btn-primary" id="saveMoneyBtn">SAVE TODAY'S LOG</button>
+        </div>
+        <div class="log-list" id="moneyLogList"></div>
+        <div class="bottom-space"></div>
+      </div>
+    </div>
+
+    <!-- MIND TRACKER -->
+    <div id="screenMind" class="screen-content">
+      <div class="scroll-area">
+        <div class="screen-hero">
+          <h2>MIND TRACKER</h2>
+          <p class="screen-date" id="mindDate"></p>
+        </div>
+        <div class="slider-section">
+          <div class="slider-row">
+            <label class="form-label">Mood <span class="slider-val" id="moodVal">5</span>/10</label>
+            <input type="range" class="slider" id="moodSlider" min="1" max="10" value="5"/>
+          </div>
+          <div class="slider-row">
+            <label class="form-label">Energy <span class="slider-val" id="energyVal">5</span>/10</label>
+            <input type="range" class="slider" id="energySlider" min="1" max="10" value="5"/>
+          </div>
+          <div class="slider-row">
+            <label class="form-label">Stress <span class="slider-val" id="stressVal">5</span>/10</label>
+            <input type="range" class="slider" id="stressSlider" min="1" max="10" value="5"/>
+          </div>
+        </div>
+        <div class="form-section">
+          <label class="form-label">Today's Reflection</label>
+          <textarea class="form-input form-textarea tall" id="reflectionInput" placeholder="What's on your mind? Wins, struggles, insights..."></textarea>
+          <button class="btn-primary" id="saveMindBtn">SAVE MIND LOG</button>
+        </div>
+        <div class="section-header"><span>MOOD HISTORY</span></div>
+        <div class="mood-chart" id="moodChart"></div>
+        <div class="bottom-space"></div>
+      </div>
+    </div>
+
+    <!-- WEEKLY REVIEW -->
+    <div id="screenWeekly" class="screen-content">
+      <div class="scroll-area">
+        <div class="screen-hero">
+          <h2>WEEKLY REVIEW</h2>
+          <p class="screen-date" id="weeklyDate"></p>
+        </div>
+        <div class="form-section">
+          <label class="form-label">🏆 Wins This Week</label>
+          <textarea class="form-input form-textarea" id="winsInput" placeholder="What did you crush this week?"></textarea>
+          <label class="form-label">⚡ Mistakes & Failures</label>
+          <textarea class="form-input form-textarea" id="mistakesInput" placeholder="What went wrong? Be honest."></textarea>
+          <label class="form-label">📚 Lessons Learned</label>
+          <textarea class="form-input form-textarea" id="lessonsInput" placeholder="What did you learn?"></textarea>
+          <label class="form-label">🎯 Focus for Next Week</label>
+          <textarea class="form-input form-textarea" id="focusInput" placeholder="What's your #1 priority next week?"></textarea>
+          <button class="btn-primary" id="saveWeeklyBtn">SAVE WEEKLY REVIEW</button>
+        </div>
+        <div class="log-list" id="weeklyLogList"></div>
+        <div class="bottom-space"></div>
+      </div>
+    </div>
+
+    <!-- 90 DAY PROGRESS -->
+    <div id="screenProgress" class="screen-content">
+      <div class="scroll-area">
+        <div class="screen-hero">
+          <h2>90-DAY PROGRESS</h2>
+        </div>
+        <div class="progress-stats-row">
+          <div class="prog-stat">
+            <span class="prog-val" id="progDaysLogged">0</span>
+            <span class="prog-lbl">Days Logged</span>
+          </div>
+          <div class="prog-stat">
+            <span class="prog-val" id="progBestStreak">0</span>
+            <span class="prog-lbl">Best Streak</span>
+          </div>
+          <div class="prog-stat">
+            <span class="prog-val" id="progAvgScore">0%</span>
+            <span class="prog-lbl">Avg Score</span>
+          </div>
+        </div>
+        <div class="section-header"><span>90-DAY HEATMAP</span></div>
+        <div class="heatmap" id="heatmap"></div>
+        <div class="section-header"><span>HABIT COMPLETION %</span></div>
+        <div class="habit-bars" id="habitBars"></div>
+        <div class="section-header"><span>AREAS TO IMPROVE</span></div>
+        <div class="improve-list" id="improveList"></div>
+        <div class="bottom-space"></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settingsModal" class="modal hidden">
+      <div class="modal-backdrop" id="modalBackdrop"></div>
+      <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <h3 class="modal-title">SETTINGS</h3>
+        <div class="settings-group">
+          <label class="form-label">App PIN (4 digits)</label>
+          <input type="number" class="form-input" id="newPinInput" placeholder="Enter new PIN" maxlength="4"/>
+          <button class="btn-secondary" id="savePinBtn">Update PIN</button>
+        </div>
+        <div class="settings-group">
+          <label class="form-label">Challenge Start Date</label>
+          <input type="date" class="form-input" id="startDateInput"/>
+          <button class="btn-secondary" id="saveStartDateBtn">Save Start Date</button>
+        </div>
+        <div class="settings-group">
+          <label class="form-label">Currency Symbol</label>
+          <input type="text" class="form-input" id="currencyInput" placeholder="₹" maxlength="3"/>
+          <button class="btn-secondary" id="saveCurrencyBtn">Save</button>
+        </div>
+        <div class="settings-group danger-zone">
+          <button class="btn-danger" id="resetDataBtn">⚠ Reset All Data</button>
+        </div>
+        <button class="btn-ghost" id="closeSettingsBtn">CLOSE</button>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-screen="Dashboard" id="navDashboard">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Home</span>
+      </button>
+      <button class="nav-btn" data-screen="Habits" id="navHabits">
+        <span class="nav-icon">✅</span>
+        <span class="nav-label">Habits</span>
+      </button>
+      <button class="nav-btn" data-screen="Body" id="navBody">
+        <span class="nav-icon">💪</span>
+        <span class="nav-label">Body</span>
+      </button>
+      <button class="nav-btn" data-screen="Money" id="navMoney">
+        <span class="nav-icon">💰</span>
+        <span class="nav-label">Money</span>
+      </button>
+      <button class="nav-btn" data-screen="Mind" id="navMind">
+        <span class="nav-icon">🧠</span>
+        <span class="nav-label">Mind</span>
+      </button>
+      <button class="nav-btn" data-screen="Weekly" id="navWeekly">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">Review</span>
+      </button>
+      <button class="nav-btn" data-screen="Progress" id="navProgress">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">90 Days</span>
+      </button>
+    </nav>
+
+  </div><!-- /app -->
+
+  <script src="js/data.js"></script>
+  <script src="js/habits.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/body.js"></script>
+  <script src="js/money.js"></script>
+  <script src="js/mind.js"></script>
+  <script src="js/weekly.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(()=>{});
+    }
+  </script>
+</body>
+</html>
